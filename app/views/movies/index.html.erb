@@ -6,9 +6,11 @@
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th>Movie Title</th>
+      <!--<th>Movie Title</th>-->
+      <th class="<%= "hilite" if @sort_key == "title" %>"><%= link_to "Movie Title", {:sort => "title"}, id: "title_header"%></th>
       <th>Rating</th>
-      <th>Release Date</th>
+      <!--<th>Release Date</th>-->
+       <th class="<%= "hilite" if @sort_key== "release_date" %>"><%= link_to "Release Date", {:sort => "release_date"}, id: "release_date_header"%></th>
       <th>More Info</th>
     </tr>
   </thead>
