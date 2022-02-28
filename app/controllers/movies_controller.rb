@@ -8,17 +8,50 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
+    # the condition of redirecting to other pages
+    if ! (request.original_url =~ /movies/) 
+      session.clear
+    end
+    
+    # if params[:ratings].nil? && params[:sort].nil? 
+    #   # the condition of returning from intro to a movie
+    #   if (!session[:ratings].nil? || !session[:sort].nil?)
+    #     params[:ratings] = session[:ratings]
+    #     params[:sort] = session[:sort]
+    #   # the condition of directly visiting the root
+    #   else
+    #     session[:ratings] = nil
+    #     session[:sort] = nil
+    #     @movies = Movie.all
+    #   end
+    
+    # the condition of coming back
+    if params[:ratings].nil? && params[:sort].nil? && (!session[:ratings].nil? || !session[:sort].nil?)
+         params[:ratings] = session[:ratings]
+         params[:sort] = session[:sort]
+    end
+    
+    # the condition of visiting the root
     if params[:ratings].nil? && params[:sort].nil?
-      @movies = Movie.all
+       @movies = Movie.all
+       session[:ratings] = nil
+       session[:sort] = nil
     elsif params[:ratings].nil?
       @sort_key=params[:sort]
       @movies = Movie.order(params[:sort])
+      session[:ratings] = nil
+      session[:sort] = params[:sort]
     elsif params[:sort].nil?
       @rating_keys = params[:ratings]
       @movies = Movie.where("rating IN (?)",@rating_keys.keys)
+      session[:ratings] = params[:ratings]
+      session[:sort] = nil
     else
       @rating_keys = params[:ratings]
+      @sort_key=params[:sort]
       @movies = Movie.where("rating IN (?)",@rating_keys.keys).order(params[:sort])
+      session[:ratings] = params[:ratings]
+      session[:sort] = params[:sort]
     end
   end
 
